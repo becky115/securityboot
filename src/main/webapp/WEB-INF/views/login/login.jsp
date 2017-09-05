@@ -46,7 +46,7 @@
 <title>Login Page</title>
 </head>
 <body>
-Login
+Login2
 <%-- <form action="<c:url value='/login/success.do'/>" method="POST">  --%>
 <form id="loginForm" action="<c:url value='/login'/>" method="POST"> 
 	아이디 : <input type="text" id="user_id" name="username" value="admin"> 
