@@ -1,39 +1,57 @@
 package com.becky.securityboot.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.becky.securityboot.handler.AuthFailureHandler;
+import com.becky.securityboot.handler.AuthSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+	
+	@Autowired
+	private AuthFailureHandler failureHandler;
+	
+	@Autowired
+	private AuthSuccessHandler successHandler;
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		System.out.println("configure");
+		
 		http
 			.authorizeRequests()
-				//.antMatchers("/login/login.do")
-				//	.permitAll()
 				.antMatchers("/**")
 					.access("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
-				//.anyRequest().authenticated()
+					//.anyRequest().authenticated()
 				.and()
 			.formLogin()
 				.loginPage("/login/login.do")
 				.permitAll()
+				.loginProcessingUrl("/login")
+				.successHandler(successHandler)
+				.failureHandler(failureHandler)
 				.and()
 			.logout()
-				.permitAll();
+				.permitAll()
+				.and()
+			.csrf()
+				.disable();
 	}
+	
+	@Bean
+	public PasswordEncoder passwordEncoder(){
+		return new BCryptPasswordEncoder();
+	}
+	
+	 
 
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		auth
-			.inMemoryAuthentication()
-				.withUser("user").password("password").roles("USER");
-	}
+
 }
 	

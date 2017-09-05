@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.becky.securityboot.mappers.MenuMapper">
+	<select id="selectListByGroup" resultType="java.util.HashMap">
+		SELECT G.group_seq, M.menu_seq, M.menu_name, M.menu_url, 
+				M.menu_top_parent, M.menu_sub_parent, M.menu_order, M.divider_flag, M.use_flag
+		FROM
+			WEB_MENU_GROUP G
+			INNER JOIN
+			(SELECT
+					menu_seq, menu_name, menu_url, menu_top_parent, menu_sub_parent, menu_order, divider_flag, use_flag
+				FROM WEB_MENU
+				WHERE use_flag = 'Y'
+				ORDER BY menu_top_parent, menu_sub_parent, menu_order
+			) M ON G.menu_seq = M.menu_seq
+			WHERE G.use_flag = 'Y'
+			<if test="groupSeq != null and groupSeq != ''">
+				AND G.group_seq = #{groupSeq}
+			</if>
+			ORDER BY G.group_seq, M.menu_top_parent, M.menu_sub_parent, M.menu_order
+	</select>
+	
+	<select id="selectMenuList" resultType="java.util.HashMap">
+		SELECT 
+			A.menu_seq,
+			A.menu_name,
+			A.menu_url,
+			A.menu_top_parent,
+			A.menu_sub_parent,
+			A.menu_order,
+			COALESCE(A.divider_flag, 'N') as divider_flag,
+			A.use_flag
+		FROM WEB_MENU A
+			ORDER BY A.menu_top_parent, A.menu_sub_parent, A.menu_order
+	</select>
+	
+	<select id="selectUserGroupList" resultType="java.util.HashMap">
+		SELECT 
+			A.group_seq,
+			A.group_code,
+			A.group_name,
+			A.group_desc,
+			A.use_flag
+		FROM USER_GROUP A
+		<where>
+			<if test="useFlag != null and useFlag != ''">
+				A.use_flag = #{useFlag}
+			</if>
+		</where>
+		ORDER BY A.group_seq
+	</select>
+	
+	<select id="selectMenuNotAuth" resultType="java.util.HashMap">
+		SELECT
+			group_seq,
+			menu_seq,
+			menu_name,
+			menu_url
+		FROM (
+			SELECT G.group_seq,
+				G.menu_seq,
+				G.use_flag as self_use_flag,
+				M.menu_name,
+				M.menu_url,
+				M.menu_top_parent,
+				(SELECT use_flag FROM WEB_MENU_GROUP WHERE menu_seq = M.menu_top_parent AND group_seq=G.group_seq) as top_parent_use_flag,
+				M.menu_sub_parent,
+				(SELECT use_flag FROM WEB_MENU_GROUP WHERE menu_seq = M.menu_sub_parent AND group_seq=G.group_seq) as sub_parent_use_flag
+			FROM WEB_MENU_GROUP G
+			INNER JOIN WEB_MENU M ON G.menu_seq = M.menu_seq
+		) A
+		WHERE
+		(self_use_flag = 'N' OR top_parent_use_flag = 'N' OR sub_parent_use_flag = 'N')
+		AND
+		A.menu_url != '#'
+	</select>
+	
+	<insert id="insertMenu" parameterType="java.util.HashMap">
+		 <selectKey keyProperty="menuSeq" resultType="int" order="BEFORE">
+			SELECT COALESCE(MAX(menu_seq), 0) + 1 FROM WEB_MENU
+		</selectKey>
+		INSERT INTO WEB_MENU
+			(menu_seq, menu_name, menu_url, menu_top_parent, menu_sub_parent, menu_order, divider_flag, use_flag)
+			VALUES(
+				#{menuSeq},
+				#{menuName},
+				#{menuUrl},
+				#{menuTopParent},
+				#{menuSubParent},
+				#{menuOrder},
+				#{dividerFlag},
+				#{useFlag}
+			)
+	</insert>
+	
+	<update id="updateMenu" parameterType="java.util.HashMap">
+		UPDATE WEB_MENU
+		<set>
+			menu_name = #{menuName},
+			menu_url = #{menuUrl},
+			menu_top_parent = #{menuTopParent},
+			menu_sub_parent = #{menuSubParent},
+			menu_order = #{menuOrder},
+			use_flag = #{useFlag}
+		</set>
+		WHERE
+			menu_seq = #{menuSeq}
+	</update>
+	
+	<delete id="deleteMenu" parameterType="java.util.HashMap">
+		DELETE FROM WEB_MENU
+		WHERE
+			menu_seq = #{menuSeq}
+	</delete>
+	
+	<select id="selectMenuGroupList" parameterType="java.lang.Integer" resultType="java.util.HashMap">
+		SELECT coalesce(A.group_seq, #{groupSeq}) as group_seq,
+				coalesce(A.use_flag, 'N') as use_flag,
+				B.menu_seq, 
+				B.menu_name,
+				B.menu_url,
+				B.menu_top_parent,
+				B.menu_sub_parent,
+				B.menu_order,
+				COALESCE(B.divider_flag, 'N') as divider_flag
+		FROM WEB_MENU_GROUP A
+		RIGHT OUTER JOIN WEB_MENU B ON A.menu_seq = B.menu_seq AND A.group_seq = #{groupSeq}
+		WHERE B.use_flag = 'Y'
+		ORDER BY B.menu_top_parent, B.menu_sub_parent, B.menu_order
+	</select>
+	<update id="insertMenuGroup" parameterType="java.util.HashMap">
+		INSERT INTO 
+			WEB_MENU_GROUP(group_seq, menu_seq, use_flag)
+		VALUES(#{groupSeq}, #{menuSeq}, #{useFlag})
+	</update>
+	
+	<update id="updateMenuGroup" parameterType="java.util.HashMap">
+		UPDATE WEB_MENU_GROUP
+		<set>
+			use_flag = #{useFlag}
+		</set>
+		WHERE
+			menu_seq = #{menuSeq}
+			AND group_seq = #{groupSeq}
+	</update>
+	
+	<delete id="deleteMenuGroup" parameterType="java.util.HashMap">
+		DELETE FROM WEB_MENU_GROUP
+		WHERE
+			menu_seq = #{menuSeq}
+	</delete>
+
+	
+</mapper>

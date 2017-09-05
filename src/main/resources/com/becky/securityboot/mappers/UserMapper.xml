@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.becky.securityboot.mappers.UserMapper">
+	<select id="select" resultMap="userMap">
+		SELECT A.user_id,
+			A.user_nm,
+			A.passwd,
+			A.lock_flag,
+			A.group_seq,
+			B.group_name,
+			GROUP_CONCAT(C.group_authority) as group_authority
+		FROM USER A
+		INNER JOIN USER_GROUP B ON A.group_seq = B.group_seq
+		INNER JOIN USER_GROUP_AUTHORITIES C ON C.group_seq = B.group_seq
+		WHERE A.user_id = #{userId}
+		GROUP BY A.group_seq
+	</select>
+	
+	<resultMap type="com.becky.securityboot.domain.UserDomain" id="userMap">
+		<id property="userId" column="user_id"/>
+		<result property="userName" column="user_nm"/>
+		<result property="passwd" column="passwd"/>
+		<result property="lockFlag" column="lock_flag"/>
+		<result property="groupSeq" column="group_seq"/>
+		<result property="groupName" column="group_name"/>
+		<result property="groupAuthority" column="group_authority"/>
+	</resultMap>
+	
+	<!-- resultType="java.util.List" -->
+	<select id="selectList" resultMap="userMap">
+		SELECT A.user_id,
+				A.user_nm,
+				A.passwd
+			FROM USER A
+	</select>
+	
+	<update id="update">
+		Update	USER
+		<set>
+			passwd = #{encodedPassword}
+		</set>
+		WHERE
+			user_id = #{userId}
+	</update>
+	
+</mapper>

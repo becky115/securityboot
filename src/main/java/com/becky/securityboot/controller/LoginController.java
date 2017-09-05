@@ -19,11 +19,7 @@ public class LoginController {
 	@SuppressWarnings("unused")
 	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 	
-	/**
-	 * Simply selects the home view to render by returning its name.
-	 */
-	@RequestMapping(value = "login/login.do", method = RequestMethod.GET)
-	//@GetMapping(value = "login/login.do")
+	@GetMapping(value = "login/login.do")
 	public String login_index(Locale locale, Model model){;
 		return "login/login";
 	}
