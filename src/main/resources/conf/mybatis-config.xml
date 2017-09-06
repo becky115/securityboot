@@ -10,7 +10,7 @@
 	</settings>
 
 	<mappers>
-		<mapper resource="com/becky/security/mapper/UserMapper.xml" />
-		<mapper resource="com/becky/security/mapper/MenuMapper.xml" />
+		<mapper resource="com/becky/securityboot/mappers/UserMapper.xml" />
+		<mapper resource="com/becky/securityboot/mappers/MenuMapper.xml" />
 	</mappers>
 </configuration>

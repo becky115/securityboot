@@ -19,7 +19,6 @@ import com.becky.securityboot.domain.UserDomain;
 import com.becky.securityboot.service.UserService;
 import com.becky.securityboot.util.RequestUtil;
 
-
 @Component
 public class AuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
 	
@@ -37,7 +36,7 @@ public class AuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
 		logger.info("success login: " + authentication.getName() +","+ authentication.isAuthenticated());
 		
 		
-		UserDomain userDomain = userService.select(authentication.getName());
+		UserDomain userDomain = userService.findUserById(authentication.getName());
 		userService.setUserDomain(request.getSession(), userDomain);
 		
 		
@@ -46,6 +45,7 @@ public class AuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
 			json.put("success", true);
 			json.put("url", request.getContextPath());
 		} catch (JSONException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

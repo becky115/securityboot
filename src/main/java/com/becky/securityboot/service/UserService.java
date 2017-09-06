@@ -6,15 +6,15 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.ibatis.session.SqlSession;
-import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.becky.securityboot.domain.UserDomain;
@@ -24,18 +24,20 @@ import com.becky.securityboot.mappers.UserMapper;
 public class UserService implements UserDetailsService{
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 	
-	private SqlSession sqlSession;
+	@Autowired
+	private UserMapper userMapper;
+	
 	
 	private static final String USER_SESSION = "USER_SESSION";
 	
-	public void setSqlSession(SqlSessionTemplate sqlSession) {
-		this.sqlSession = sqlSession;
-	}
+//	private SqlSession sqlSession;
+//	public void setSqlSession(SqlSessionTemplate sqlSession) {
+//		this.sqlSession = sqlSession;
+//	}
 	
 	@Override
 	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
 		logger.debug("loadUserByUsername" + userId);
-		UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
 		UserDomain user = userMapper.select(userId);
 		String userName = user.getUserId();
 		String userPass = user.getPasswd();
@@ -64,18 +66,15 @@ public class UserService implements UserDetailsService{
 	}
 	
 	
-	public UserDomain select(String userId) {
-		UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+	public UserDomain findUserById(String userId) {
 		return userMapper.select(userId);
 	}
 
-	public List<UserDomain> selectList() {
-		UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+	public List<UserDomain> findAllUserList() {
 		return userMapper.selectList();
 	}
 
 	public int update(String userId, String encodedPassword) {
-		UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
 		return userMapper.update(userId, encodedPassword);
 	}
 	

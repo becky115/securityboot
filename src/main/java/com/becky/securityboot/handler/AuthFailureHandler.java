@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import com.becky.securityboot.util.RequestUtil;
 
-
 @Component
 public class AuthFailureHandler extends SimpleUrlAuthenticationFailureHandler{
 	
@@ -28,6 +27,7 @@ public class AuthFailureHandler extends SimpleUrlAuthenticationFailureHandler{
 			try {
 				json.put("success", false);
 			} catch (JSONException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			RequestUtil.responseWrite(response, json);
