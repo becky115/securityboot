@@ -11,7 +11,7 @@
 			<list></list>
 		</property>
 		<property name="blankList">
-			<list>/login/login.do</list>
+			<list><value>/login/login.do</value></list>
 		</property>
 		<property name="popupList">
 			<list></list>
