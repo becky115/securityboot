@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.becky.securityboot.domain.UserDomain;
@@ -26,14 +25,8 @@ public class UserService implements UserDetailsService{
 	
 	@Autowired
 	private UserMapper userMapper;
-	
-	
+
 	private static final String USER_SESSION = "USER_SESSION";
-	
-//	private SqlSession sqlSession;
-//	public void setSqlSession(SqlSessionTemplate sqlSession) {
-//		this.sqlSession = sqlSession;
-//	}
 	
 	@Override
 	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
@@ -55,11 +48,12 @@ public class UserService implements UserDetailsService{
 		
 		String[] groupAuthority = user.getGroupAuthority().toString().split(",");
 		for(String role:groupAuthority){
+			System.out.println("role " + role);
 			authorities.add(new SimpleGrantedAuthority(role));
 		}
 		UserDetails userDetail = new User(userName, userPass, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
 		System.out.println("userDetail" + userDetail.getPassword());
-		
+		System.out.println(authorities.toString());
 		logger.debug(user.toString());
 	//org.springframework.security.authentication.BadCredentialsException:
 		return userDetail;

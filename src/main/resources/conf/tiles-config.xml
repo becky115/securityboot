@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	<definition name="default" template="/WEB-INF/views/layout/basic.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/include/header.jsp" />
+		<put-attribute name="style" value="/WEB-INF/views/include/style.jsp" />
+		<put-attribute name="script" value="/WEB-INF/views/include/script.jsp" />
+		<put-attribute name="topMenu" value="/WEB-INF/views/include/top_menu.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="alarm" value="/WEB-INF/views/include/alarm.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/views/include/footer.jsp" />
+	</definition>
+	
+	<definition name="defaultLeftMenu" template="/WEB-INF/views/layout/basicMenu.jsp" preparer="com.narusec.web.tiles.MenuViewPreparer" extends="default">
+		<put-attribute name="leftMenu" value="/WEB-INF/views/include/left_menu.jsp" />
+	</definition>
+	
+	<definition name="blank" template="/WEB-INF/views/layout/blank.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/include/header.jsp" />
+		<put-attribute name="style" value="/WEB-INF/views/include/style.jsp" />
+		<put-attribute name="script" value="/WEB-INF/views/include/script.jsp" />
+		<put-attribute name="body" value="" />
+	</definition>
+	
+	<definition name="dashboard" template="/WEB-INF/views/layout/dashboard.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/include/header.jsp" />
+		<put-attribute name="style" value="/WEB-INF/views/include/style.jsp" />
+		<put-attribute name="script" value="/WEB-INF/views/include/script.jsp" />
+		<put-attribute name="topMenu" value="/WEB-INF/views/include/top_menu.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/WEB-INF/views/include/footer.jsp" />
+	</definition>
+	
+	<!-- title -->
+	<definition name="*/search/log_search3_new_simple" extends="default">
+		<put-attribute name="bodyTitle" value="검색결과"/>
+		<put-attribute name="body" value="/WEB-INF/views/search/log_search3_new_simple.jsp" />
+	</definition>
+	
+	<definition name="*/basicUser/pwChange" extends="default">
+		<put-attribute name="bodyTitle" value="비밀번호 변경"/>
+		<put-attribute name="body" value="/WEB-INF/views/basicUser/pwChange.jsp" />
+	</definition>
+	
+	<definition name="*/setting/menu_group_admin" extends="default">
+		<put-attribute name="bodyTitle" value="그룹 메뉴"/>
+		<put-attribute name="body" value="/WEB-INF/views/setting/menu_group.jsp" />
+	</definition>
+	
+	<definition name="*/admin/login_config" extends="defaultLeftMenu">
+		<put-attribute name="bodyTitle" value="로그인 설정"/>
+		<put-attribute name="body" value="/WEB-INF/views/admin/login_config.jsp" />
+	</definition>
+	
+	<definition name="*/login/*" extends="blank">
+		 <put-attribute name="body" value="/WEB-INF/views/login/{2}.jsp" />
+	</definition>
+	
+	<definition name="*/event/eps_security_event_list_admin" extends="default">
+		<put-attribute name="bodyTitle" value="침해사고 보안 이벤트"/>
+		<put-attribute name="body" value="/WEB-INF/views/event/eps_security_event_list.jsp" />
+	</definition>
+
+	<!-- popup -->
+	<definition name="*/*/*popup" extends="blank">
+		<put-attribute name="body" value="/WEB-INF/views/{2}/{3}popup.jsp" />
+	</definition>
+	
+		
+	<!-- dashboard graph -->
+	<definition name="*/dashboard/*" extends="dashboard">
+		 <put-attribute name="body" value="/WEB-INF/views/dashboard/{2}.jsp" />
+		 <!-- <put-attribute name="searchOption" value="/WEB-INF/views/dashboard/{2}_search_option.jsp" /> -->
+	</definition>
+	
+	<definition name="*/*/*" extends="default" preparer="com.narusec.web.tiles.MenuViewPreparer">
+		<put-attribute name="body" value="/WEB-INF/views/{2}/{3}.jsp" />
+	</definition>
+	
+	<definition name="*/*/*/*" extends="blank">
+		<put-attribute name="body" value="/WEB-INF/views/{2}/{3}/{4}.jsp" />
+	</definition>
+	
+	
+</tiles-definitions>

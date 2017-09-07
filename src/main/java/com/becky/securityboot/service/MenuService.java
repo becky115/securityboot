@@ -2,6 +2,7 @@ package com.becky.securityboot.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -149,6 +150,26 @@ public class MenuService {
 		return notAuthMenuList;
 	}
 	
+	
+	public Boolean checkDepth(Integer groupSeq, String requestUrl){
+		Map<?, ?> menuList = this.getMenuListByGroup(groupSeq);
+		Iterator<?> it = menuList.keySet().iterator();
+		Boolean checkDepth = true;
+		
+		while(it.hasNext()){
+			String depth1Key = (String) it.next();
+			Map<?, ?> depth1Menu = (Map<?, ?>) menuList.get(depth1Key);
+			Integer menuSeq = (Integer) depth1Menu.get("menu_seq");
+			
+			if(requestUrl.equals(depth1Menu.get("menu_url"))){
+				if(depth1Menu.get(MENU_DEPTH_2+menuSeq) == null){
+					checkDepth = false;
+					break;
+				}
+			}
+		}
+		return checkDepth;
+	}
 
 
 }

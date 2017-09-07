@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.vote.AuthenticatedVoter;
@@ -16,6 +15,7 @@ import org.springframework.security.access.vote.UnanimousBased;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -30,7 +30,6 @@ import com.becky.securityboot.service.UserService;
 
 @Configuration
 @EnableWebSecurity
-//@ComponentScan(basePackages ="com.becky.securityboot")
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	private static final String LOGIN_PROCESSING_URL = "/login";
@@ -83,10 +82,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.authorizeRequests()
-				.accessDecisionManager(accessDecisionManager())
+				.antMatchers(
+						"/css/**",
+						"/webjars/**",
+						"/images/**",
+						"/js/**").permitAll()
 				.antMatchers("/**")
 					.access("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
 					.anyRequest().authenticated()
+					.accessDecisionManager(accessDecisionManager())
 					.and()
 //				.sessionManagement() 
 //					.maximumSessions(1)
@@ -119,5 +123,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		auth.authenticationProvider(daoAuthenticationProvider());
 	}
 
+	@Override
+	public void configure(WebSecurity web) throws Exception {
+		web.ignoring()
+			.antMatchers("/resources/**");
+		//anyRequest();
+	}
 }
 	
