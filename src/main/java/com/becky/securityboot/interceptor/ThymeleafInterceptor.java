@@ -97,7 +97,6 @@ public class ThymeleafInterceptor extends HandlerInterceptorAdapter {
 		return viewName.startsWith("redirect:") || viewName.startsWith("forward:");
 	}
 
-
 	public List<String> getBasicList() {
 		return basicList;
 	}

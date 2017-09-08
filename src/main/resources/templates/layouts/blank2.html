@@ -3,16 +3,14 @@
 <!-- <head th:replace="fragments/header :: header"
 
 </head> -->
-<head th:insert="fragments/header :: header(~{::title}, ~{::link}, ~{::.aa})">
-	<title>Awesome22 - Main</title>
-	<th:block th:replace="${view}:: style"></th:block>
+<!-- <head th:replace="fragments/header :: header (pageTitle='', ~{::link})"> -->
+<head th:replace="fragments/header :: header (pageTitle='', links=~{::link})">
+	<link rel="icon" th:href="@{/images/icon/favicon.ico}"/>
 	<link rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css}"/>
 	<link rel="stylesheet" th:href="@{/css/common/common.css}"/>
-	<th:block class='aa' th:replace="${view}:: style"></th:block>
 </head>
 <body>
 	<div class="container-fluid">
-		<th:block th:replace="${view} :: aa"></th:block>
 		<div th:replace="${view} :: content">Content goes here!</div>
 	</div>
 </body>

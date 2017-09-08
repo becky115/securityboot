@@ -1,18 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:fragment="header" th:insert="">
-	<meta charset="UTF-8">
-	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="">
-	<meta name="author" content="">
-	<title>becky2</title>
-	<link rel="icon" th:href="@{/images/icon/favicon.ico}"/>
-	<link rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css}"/>
-	<link rel="stylesheet" th:href="@{/css/common/common.css}"/>
+<head th:fragment="header (title, links, aa)">
+	<title th:replace="${title}">The awesome application</title>
+	<link rel="icon" th:href="@{/images/icon/favicon.ico}" th:remove="all"/>
+	 
+	<th:block th:replace="${links}" />
+	<th:block th:replace="${aa}" />
+	<th:block th:replace="fragments/script :: script"/>
 </head>
-<body>
 
-</body>
-</html>
+  <!--/* Per-page placeholder for additional links
+  <title th:replace="${title}">The awesome application</title> 
+  <th:block th:replace="${links}" />
+  -->

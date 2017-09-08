@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="header (pageTitle, links)">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title th:text="${#strings.isEmpty(pageTitle)} ? ${links}:${pageTitle}">becky</title>
+
+	<th:block th:replace="fragments/script :: script"></th:block>
+		<script type="text/javascript">
+		console.log('<th:text="${pageTitle}"/>')
+	</script>
+</head>
+<body>
+</body>
+</html>
+<!-- 
+<thymeleaf xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" 
+    th:fragment="head" th:remove="tag"></thymeleaf> -->
