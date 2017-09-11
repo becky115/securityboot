@@ -32,6 +32,12 @@ public class UserService implements UserDetailsService{
 	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
 		logger.debug("loadUserByUsername" + userId);
 		UserDomain user = userMapper.select(userId);
+		
+		
+		if(user == null){
+			throw new UsernameNotFoundException("no user :" + userId);
+		}
+		
 		String userName = user.getUserId();
 		String userPass = user.getPasswd();
 		Character lockFlag = user.getLockFlag();
@@ -55,7 +61,7 @@ public class UserService implements UserDetailsService{
 		System.out.println("userDetail" + userDetail.getPassword());
 		System.out.println(authorities.toString());
 		logger.debug(user.toString());
-	//org.springframework.security.authentication.BadCredentialsException:
+	
 		return userDetail;
 	}
 	

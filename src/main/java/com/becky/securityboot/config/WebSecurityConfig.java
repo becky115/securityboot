@@ -59,6 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		LoginAuthenticationProvider authenticationProvider = new LoginAuthenticationProvider();
 		authenticationProvider.setUserDetailsService(userDetailsService);
 		authenticationProvider.setPasswordEncoder(passwordEncoder());
+		authenticationProvider.setHideUserNotFoundExceptions(false);
 		return authenticationProvider;
 	}
 	
@@ -114,7 +115,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.permitAll()
 				.and()
 			.csrf();
-				//.disable();
 		
 	}
 //	
@@ -127,7 +127,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring()
 			.antMatchers("/resources/**");
-		//anyRequest();
 	}
 }
 	

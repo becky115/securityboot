@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public class LoginAuthenticationProvider extends DaoAuthenticationProvider{
 	private static final Logger logger = LoggerFactory.getLogger(LoginAuthenticationProvider.class);
@@ -31,6 +32,8 @@ public class LoginAuthenticationProvider extends DaoAuthenticationProvider{
 		super.additionalAuthenticationChecks(userDetails, authentication);
 	}
 	
+	
+	
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		try{
@@ -38,15 +41,21 @@ public class LoginAuthenticationProvider extends DaoAuthenticationProvider{
 			logger.info("auth... provider:" + auth.isAuthenticated());
 			
 			return auth;
+		}catch(UsernameNotFoundException e){
+			logger.info("error... provider UsernameNotFoundException " + e.getMessage());
+			throw e;
 		}catch (BadCredentialsException e) {
 			logger.info("error... provider BadCredentialsException " + e.getMessage());
 			//update bad
 			throw e;
 		}catch (LockedException e) {
+			logger.info("error... provider LockedException " + e.getMessage());
 			throw e;
 		}catch (AccountExpiredException e) {
+			logger.info("error... provider AccountExpiredException " + e.getMessage());
 			throw e;
 		}catch (Exception e) {
+			logger.info("error... provider Exception " + e.getMessage());
 			throw e;
 		}
 		
